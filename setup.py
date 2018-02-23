@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='turtlesvg',
-    version='1.2',
+    version='1.3',
     author='SATOH Naotaka',
     py_modules=['turtlesvg'],
     packages=['svgutl'],
