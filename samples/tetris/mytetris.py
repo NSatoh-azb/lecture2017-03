@@ -227,7 +227,6 @@ class Game:
         self.go_next_block()
         
         # ここからメインループを記述（以下のコメントアウトをはずしてメインループを作れ）
-        '''
         while True:
             key = None
             for event in pygame.event.get():
@@ -236,14 +235,40 @@ class Game:
                     sys.exit()
                 elif event.type == KEYDOWN:
                     key = event.key
-            
-            
-            # その他のイベント処理をここに記述
-            
-                
-            fpsclock.tick(15) # 1秒間に15ループくらいになるようにアイドリング
-         '''
+                    
+            if not self.is_game_over():
+                self.clock_time += 5
+                # 一定時間経過ごとにスピードを速くする
+                if self.clock_time % self.speed_up_clock == 0:
+                    self.interval = max(self.max_speed, self.interval - 2)
+                  
+                # 落下処理
+                self.fall()
+    
+                # キーイベント処理
+                tmp_x = self.block.xpos
+                tmp_y = self.block.ypos
+                tmp_t = self.block.turn
+                if key == K_SPACE:
+                    tmp_t = (tmp_t + 1) % 4
+                elif key == K_RIGHT:
+                    tmp_x += 1
+                elif key == K_LEFT:
+                    tmp_x -= 1
+                elif key == K_DOWN:
+                    tmp_y += 1
+    
+                if not self.block.is_overlapped(tmp_x, tmp_y, tmp_t, self.field):
+                    self.block.update(tmp_x, tmp_y, tmp_t)
+    
 
+            self.update_screen()
+    
+            if self.is_game_over():
+                self.window.blit(message_over, message_rect)
+                pygame.display.update()
+
+            fpsclock.tick(15) # 1秒間に15ループになるようにアイドリング
 
 
 # -- メイン ---
